@@ -85,6 +85,10 @@ class WebSocketServer(QObject):
         self.command_sent.emit(message)
         return True
 
+    @property
+    def connected(self) -> bool:
+        return bool(self._clients)
+
     async def _broadcast(self, text: str) -> None:
         clients = list(self._clients)
         if not clients:

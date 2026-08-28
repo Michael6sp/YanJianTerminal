@@ -8,6 +8,7 @@ from PySide6.QtGui import QImage
 
 class VideoDecoder(QThread):
     frame_ready = Signal(QImage)
+    codec_changed = Signal(str)
     log = Signal(str)
 
     def __init__(self) -> None:
@@ -59,13 +60,12 @@ class VideoDecoder(QThread):
                         height, width, _ = array.shape
                         image = QImage(array.data, width, height, width * 3, QImage.Format_RGB888).copy()
                         self.frame_ready.emit(image)
-            except av.AVError as exc:
-                self.log.emit(f"Video decode error ({codec_name}): {exc}")
             except Exception as exc:
-                self.log.emit(f"Video decoder error: {exc}")
+                self.log.emit(f"Video decode error ({codec_name}): {exc}")
 
     def _new_codec(self, codec_name: str):
         self.log.emit(f"Video decoder configured: {codec_name}")
+        self.codec_changed.emit("H265/HEVC" if codec_name == "hevc" else "H264")
         return av.CodecContext.create(codec_name, "r")
 
     @staticmethod

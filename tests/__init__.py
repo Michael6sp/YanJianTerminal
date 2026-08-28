@@ -1,0 +1,1 @@
+"""YanJian Terminal tests."""
