@@ -1,0 +1,4 @@
+PySide6
+websockets
+av
+opencv-python
